@@ -1,7 +1,6 @@
 package ca.ucalgary.ensf380;
 
 import java.util.*;
-import java.sql.*;
 
 public class Train {
 	//Attributes
