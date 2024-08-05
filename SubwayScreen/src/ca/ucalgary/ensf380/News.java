@@ -4,6 +4,7 @@ import java.util.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.*;
+import org.json.*;//need to add gson.jar file to classpath
 
 //In this file since we want to be able to find news with a keyword or just simply the news
 //We need to make 2 different 
@@ -45,4 +46,20 @@ public class News {
 		return news.toString();
 	}
 	
+	public void displayNews(String jsonResponse) {
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        JSONArray articles = jsonObject.getJSONArray("articles");
+        
+        for (int i = 0; i < articles.length(); i++) {
+            JSONObject article = articles.getJSONObject(i);
+            String title = article.getString("title");
+            String description = article.getString("description");
+            String url = article.getString("url");
+
+            System.out.println("Title: " + title);
+            System.out.println("Description: " + description);
+            System.out.println("URL: " + url);
+            System.out.println();
+        }
+    }
 }
