@@ -28,11 +28,11 @@ public class Ad {
 		this.name = name;
 	}
 	
-	public String getFile_path() {
+	public String getFile_Path() {
 		return file_path;
 	}
 	
-	public void setFile_path(String file_path) {
+	public void setFile_Path(String file_path) {
 		this.file_path = file_path;
 	}
 	

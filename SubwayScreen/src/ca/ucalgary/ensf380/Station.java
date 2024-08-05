@@ -4,13 +4,15 @@ package ca.ucalgary.ensf380;
 public class Station {
 	//Attributes according to psv file
 	private int stationNum;
+	private String stationName;
 	private String stationCode;
 	private double stationX;
 	private double stationY;
 	
 	//Constructor
-	public Station(int stationNum, String stationCode, double stationX, double stationY) {
+	public Station(int stationNum, String stationName, String stationCode, double stationX, double stationY) {
 		this.stationNum = stationNum;
+		this.stationName = stationName;
 		this.stationCode = stationCode;
 		this.stationX = stationX;
 		this.stationY = stationY;
@@ -23,6 +25,12 @@ public class Station {
 	}
 	public void setStationNum(int stationNum) {
 		this.stationNum = stationNum;
+	}
+	public String getStationName() {
+		return stationName;
+	}
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
 	}
 	public String getStationCode() {
 		return stationCode;
