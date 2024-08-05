@@ -1,5 +1,6 @@
 package ca.ucalgary.ensf380;
 //This class is to be implemented in Advertisements.java as a type Ad for the list of ads
+//Also provides getters for when i need to access file_path
 public class Ad {
 	private int key;
 	private String name;

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+//The name of this file is kind of deceiving, this is the file for fetching from db and returning a list of ads
 public class Advertisement  {
 	//In this file I will pull the information from my ads database
 	//private static final for access tokens to db

@@ -6,12 +6,12 @@ public class Train {
 	//Attributes
 	private int trainNum;//Train number
 	private TrainLine trainLine;//Train Line
-	private List<Stations> stations;//List of all stations this train goes through
+	private List<Station> stations;//List of all stations this train goes through
 	private String direction;// direction of train
 	private String location; //current location of train
 	
 	//train constructor
-	public Train(int trainNum, TrainLine trainLine, List<Stations> stations, String direction, String location) {
+	public Train(int trainNum, TrainLine trainLine, List<Station> stations, String direction, String location) {
 	    this.trainNum = trainNum;
 	    this.trainLine = trainLine;
 	    this.stations = stations;
@@ -32,10 +32,10 @@ public class Train {
 	public void setTrainLine(TrainLine trainLine) {
 		this.trainLine = trainLine;
 	}
-	public List<Stations> getStations() {
+	public List<Station> getStations() {
 		return stations;
 	}
-	public void setStations(List<Stations> stations) {
+	public void setStations(List<Station> stations) {
 		this.stations = stations;
 	}
 	public String getDirection() {
