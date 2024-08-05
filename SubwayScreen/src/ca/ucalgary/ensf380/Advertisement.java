@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Advertisement  {
@@ -15,6 +14,7 @@ public class Advertisement  {
 	private static final String user = "postgres";
 	private static final String pass = "Ilovesoccer123!";
 	private Connection myConnect;
+	private List<Ad> ads; // make here so its accessible within this file
 	
 	//1. Opening connection using drivermanager to db
 	//Standard procedure for making connection
@@ -43,20 +43,26 @@ public class Advertisement  {
 		}
 	}	
 	
-	//Now need to make a method tp get adds that creates a statement (2) and executes statement (3)
+	//Now need to make a method to get adds that creates a statement (2) and executes statement (3)
 	//Make List of Ads to get all the ads and we can use them later (regex?)
-	public List<Ad> listOfAds {
-		List<Ad> ads = new ArrayList<>();
-		Statement myStmt = myConnect.createStatement();
-		ResultSet results = myStmt.executeQuery("SELECT * FROM adtable");
-		while (results.next()) {
-			int key = results.getInt("key");
-			String name = results.getString("name");
-			String file_path = results.getString("file_path");
-			Ad ad = Ad(key, name, file_path);
-			ads.add(ad);
+	public List<Ad> getAds(){
+		//try catch for sql exception again
+		//here i am creating a statement and executing it
+		//for every iteration of the database i assign the values to variables and store them as Ad class in a List of Ad instances
+		try {
+			Statement myStmt = myConnect.createStatement();
+			ResultSet results = myStmt.executeQuery("SELECT * FROM adtable");
+			while (results.next()) {
+				int key = results.getInt("key");
+				String name = results.getString("name");
+				String file_path = results.getString("file_path");
+				Ad ad = new Ad(key, name, file_path);
+				ads.add(ad);
+			}
+			
+		} catch (SQLException e){
+			e.printStackTrace();
 		}
 		return ads;
 	}
 }
-
