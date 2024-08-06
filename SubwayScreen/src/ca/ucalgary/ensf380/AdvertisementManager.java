@@ -6,11 +6,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import java.sql.SQLException;
 import java.awt.Font;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-// This class will handle displaying the ads
 public class AdvertisementManager {
     private Timer adTimer = new Timer();
     private ArrayList<Ad> ads;
@@ -19,7 +18,7 @@ public class AdvertisementManager {
     private static final int AD_DISPLAY_TIME = 10000; // 10 seconds for ads
     private static final int MAP_DISPLAY_TIME = 5000; // 5 seconds for the map
 
-    // Constructor with JPanel parameter so that it will be easy to call in SubwayScreen
+    // Constructor with JPanel parameter for easy integration
     public AdvertisementManager(JPanel adPanel) throws SQLException {
         this.adPanel = adPanel;
         Advertisement advertisements = new Advertisement();
@@ -44,12 +43,16 @@ public class AdvertisementManager {
             
             // Fetch the current ad
             Ad currentAd = ads.get(currentAdIndex);
-            String filePath = currentAd.getFile_Path();
+            String filePath = currentAd.getFile_Path(); // Ensure this method is correctly named in Ad
 
-            
-            JLabel adLabel;
-            ImageIcon icon = new ImageIcon(filePath);
-            adLabel = new JLabel(icon);
+            JLabel adLabel = new JLabel();
+            try {
+                ImageIcon icon = new ImageIcon(filePath);
+                adLabel.setIcon(icon);
+            } catch (Exception e) {
+                adLabel.setText("Image not available");
+                e.printStackTrace();
+            }
 
             adLabel.setFont(new Font("Arial", Font.BOLD, 14));
             adPanel.add(adLabel);
@@ -58,6 +61,45 @@ public class AdvertisementManager {
 
             // Update the current ad index
             currentAdIndex = (currentAdIndex + 1) % ads.size();
+        });
+    }
+
+    // Optionally, add a method to stop the timer if needed
+    public void stopAdRotation() {
+        adTimer.cancel();
+    }
+
+    // Optionally, add a method to handle map display
+    private void startMapDisplay() {
+        Timer mapTimer = new Timer();
+        mapTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                displayMap();
+            }
+        }, 0, AD_DISPLAY_TIME); // Adjust timing as needed
+    }
+
+    // Display the map
+    private void displayMap() {
+        SwingUtilities.invokeLater(() -> {
+            adPanel.removeAll();
+            
+            // Path to your map image
+            String mapFilePath = "data/Maps/TrainMap.jpg"; 
+            JLabel mapLabel = new JLabel();
+            try {
+                ImageIcon icon = new ImageIcon(mapFilePath);
+                mapLabel.setIcon(icon);
+            } catch (Exception e) {
+                mapLabel.setText("Map not available");
+                e.printStackTrace();
+            }
+
+            mapLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            adPanel.add(mapLabel);
+            adPanel.revalidate();
+            adPanel.repaint();
         });
     }
 }

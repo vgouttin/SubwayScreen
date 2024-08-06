@@ -96,8 +96,6 @@ public class SubwayScreen extends JFrame implements ActionListener{
 		add(newsPanel);
 		add(imagePanel);
 		
-		
-		adManager = new AdvertisementManager(adPanel);
 	        
 		setVisible(true);
 		

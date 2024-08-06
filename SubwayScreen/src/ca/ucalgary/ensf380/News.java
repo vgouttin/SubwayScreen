@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import com.google.gson.*;
-//need to add gson.jar file to classpath
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 //In this file since we want to be able to find news with a keyword or just simply the news
 //We need to make 2 different 
