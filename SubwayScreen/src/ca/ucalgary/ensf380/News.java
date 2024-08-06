@@ -1,72 +1,77 @@
 package ca.ucalgary.ensf380;
 
 import java.io.BufferedReader;
-
-import java.util.*;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-//In this file since we want to be able to find news with a keyword or just simply the news
-//We need to make 2 different 
 public class News {
-	private ArrayList<String> news;
-	private static final String NEWS_API_URL = "https://newsdata.io/free-news-api";//endpoint
-	private static final String NEWS_API_KEY = "pub_50109bb228fb4a8154478601b2fc0c8938e2b";
-	
-	public News () {
-		this.news = new ArrayList<String>();
-	}
-	//method to fetch news with keyword
-	public String getNewsWithKeyword(String keyword) {
-		return fetchNews("q=" + keyword);//defines the query parameter search
-	}
-	
-	public String getNewsGeneral() {
-		return fetchNews("");
-	}
-	
-	public String fetchNews(String queryParameter) {
-		StringBuilder news = new StringBuilder();
-		try {
-			String newsURL = NEWS_API_URL + "?apikey=" + NEWS_API_KEY + (queryParameter.isEmpty() ? "" : "&" + queryParameter);
-			URL url = new URL(newsURL);
-			//Makes new url base on if there is a keyword search or not
-			//(queryParams.isEmpty() ? "" : "&" + queryParams); is like an if else statement, if the first part is true put ""
-			//otherwise do the other part
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
-			
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
-				String line;
-                while ((line = reader.readLine()) != null) {
-                    news.append(line).append("\n");
-                }
-			}
-			
-			connection.disconnect();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return news.toString();
-	}
-	
-	public void displayNews(String jsonResponse) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONArray articles = jsonObject.getJSONArray("articles");
-        
-        for (int i = 0; i < articles.length(); i++) {
-            JSONObject article = articles.getJSONObject(i);
-            String title = article.getString("title");
-            String description = article.getString("description");
-            String url = article.getString("url");
+    private static final String NEWS_API_URL = "https://newsdata.io/api/1/news";
+    private static final String NEWS_API_KEY = "pub_50109bb228fb4a8154478601b2fc0c8938e2b";
 
-            System.out.println("Title: " + title);
-            System.out.println("Description: " + description);
-            System.out.println("URL: " + url);
-            System.out.println();
+    // Method to fetch news with a keyword
+    public String getNewsWithKeyword(String keyword) {
+        return fetchNews("q=" + keyword); // Defines the query parameter search
+    }
+
+    // Method to fetch general news
+    public String getNewsGeneral() {
+        return fetchNews(""); // Fetches general news
+    }
+
+    // Method to fetch news based on query parameters
+    private String fetchNews(String queryParameter) {
+        StringBuilder news = new StringBuilder();
+        try {
+            String newsURL = NEWS_API_URL + "?apikey=" + NEWS_API_KEY + (queryParameter.isEmpty() ? "" : "&" + queryParameter);
+            URL url = new URL(newsURL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        news.append(line).append("\n");
+                    }
+                }
+            } else {
+                System.err.println("Error: HTTP response code " + responseCode);
+            }
+
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return news.toString();
+    }
+
+    // Method to parse and return news titles from JSON response
+    public String parseNewsTitles(String jsonResponse) {
+        StringBuilder titles = new StringBuilder();
+        try {
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            // Print the keys available in the JSON object
+            System.out.println("Keys in JSON response: " + jsonObject.keySet());
+
+            if (jsonObject.has("articles")) {
+                JSONArray articles = jsonObject.getJSONArray("articles");
+
+                for (int i = 0; i < articles.length(); i++) {
+                    JSONObject article = articles.getJSONObject(i);
+                    String title = article.optString("title", "No title available");
+                    titles.append(title).append("\n\n");
+                }
+            } else {
+                titles.append("No articles found in the response.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error parsing news response.");
+            e.printStackTrace();
+        }
+        return titles.toString();
     }
 }

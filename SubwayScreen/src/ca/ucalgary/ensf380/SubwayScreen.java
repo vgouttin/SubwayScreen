@@ -2,133 +2,171 @@ package ca.ucalgary.ensf380;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import javax.swing.Timer;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.*;
-import java.sql.SQLException;
-import java.io.*;
 
 public class SubwayScreen extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
+
     // Panels
     private JPanel adPanel, weatherTimePanel, newsPanel, imagePanel;
-    // Labels
+    // Labels and TextAreas
     private JLabel weatherLabel;
+    private JTextArea newsTextArea;
     // Timers
     private Timer weatherTimer, trainTimer, newsTimer;
-    // Weather instance
+    // Weather and News instances
     private Weather weather;
-    
-    private String[] args;
+    private News news;
 
-    public SubwayScreen(String[] args) {
-        this.args = args;
-        
+    public SubwayScreen() {
         setTitle("Subway Screen System");
         setSize(1200, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
+
         initializeComponents();
-        
+
+        Advertisement ad = new Advertisement();
+        ad.establishConnection();
         // Timers
-        weatherTimer = new Timer(60000, e -> changeWeather());
+        weatherTimer = new Timer(1, e -> changeWeather());
         weatherTimer.start();
-        
+
         trainTimer = new Timer(20000, e -> changeTrains());
         trainTimer.start();
-        
+
         newsTimer = new Timer(10000, e -> changeNews());
         newsTimer.start();
     }
 
     public void changeWeather() {
-        // Assume a default city name or get it from arguments
-        String cityName = "Calgary,CA";
-        String weatherInfo = Weather.getWeather(cityName);
-        weatherLabel.setText("<html>" + weatherInfo.replaceAll("\n", "<br>") + "</html>");
+        try {
+            String cityName = "Calgary";
+            String weatherInfo = weather.getTemperature(cityName);
+            weatherLabel.setText("<html>" + getCurrentTime() + "<br>" + weatherInfo.replaceAll("\n", "<br>") + "</html>");
+        } catch (Exception e) {
+            weatherLabel.setText("Error retrieving weather data.");
+            e.printStackTrace();
+        }
     }
-    
+
     public void changeTrains() {
-        // Implementation for train updates
+        // Placeholder implementation for train updates
+        System.out.println("Updating train information...");
     }
 
     public void changeNews() {
-        // Implementation for news updates
-    }
-    
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new SubwayScreen(args));
+        try {
+            String newsContent = news.getNewsGeneral();
+            System.out.println("News JSON Response: \n" + newsContent); // Print the response
+            String newsTitles = news.parseNewsTitles(newsContent);
+            newsTextArea.setText(newsTitles);
+        } catch (Exception e) {
+            newsTextArea.setText("Error retrieving news.");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         // Handle action events if needed
     }
-    
+
     public void initializeComponents() {
-    	// Initialize all panels
-        this.weatherTimePanel = new JPanel();
-        this.adPanel = new JPanel();
-        this.newsPanel = new JPanel();
-        this.imagePanel = new JPanel();
-        
+        // Initialize all panels
+        weatherTimePanel = new JPanel();
+        adPanel = new JPanel();
+        newsPanel = new JPanel();
+        imagePanel = new JPanel();
+
         // Set backgrounds
         weatherTimePanel.setBackground(Color.blue);
         adPanel.setBackground(Color.white);
         newsPanel.setBackground(Color.black);
         imagePanel.setBackground(Color.white);
-        
-        // Initialize Weather instance with a default city
+
+        // Initialize Weather and News instances
         weather = new Weather();
-        
-        // Add labels
+        news = new News();
+
+        // Initialize components
         weatherLabel = new JLabel();
+        weatherLabel.setForeground(Color.white);  // Set text color to be visible on blue background
+        weatherLabel.setPreferredSize(new Dimension(200, 50)); // Adjust size as needed
         weatherTimePanel.add(weatherLabel);
-        
-        weatherTimePanel.add(new JLabel("Time and Weather:") {{
+
+        newsTextArea = new JTextArea();
+        newsTextArea.setEditable(false);
+        newsTextArea.setLineWrap(true);
+        newsTextArea.setWrapStyleWord(true);
+        newsTextArea.setBackground(Color.black);
+        newsTextArea.setForeground(Color.white);
+
+        weatherTimePanel.add(new JLabel("") {{
             setFont(new Font("Arial", Font.BOLD, 14));
+            setForeground(Color.white);  // Set text color to be visible on blue background
         }});
         adPanel.add(new JLabel("Advertisements:") {{
             setFont(new Font("Arial", Font.BOLD, 14));
         }});
         newsPanel.add(new JLabel("News:") {{
             setFont(new Font("Arial", Font.BOLD, 14));
+            setForeground(Color.white);  // Set text color to be visible on black background
         }});
+        newsPanel.add(new JScrollPane(newsTextArea)); // Add JTextArea to JScrollPane for scrolling
+
         imagePanel.add(new JLabel("Image:") {{
             setFont(new Font("Arial", Font.BOLD, 14));
         }});
-        
+
         GridBagConstraints weatherTimeGBC = new GridBagConstraints();
         weatherTimeGBC.weightx = 0.25;
-        weatherTimeGBC.weighty = 0.6;
-        weatherTimeGBC.gridx = 0; //column index
-        weatherTimeGBC.gridy = 0;//row index
-        
+        weatherTimeGBC.weighty = 0.6;	
+        weatherTimeGBC.gridx = 0;
+        weatherTimeGBC.gridy = 0;
+        weatherTimeGBC.fill = GridBagConstraints.BOTH;
+
         GridBagConstraints adGBC = new GridBagConstraints();
         adGBC.weightx = 0.75;
         adGBC.weighty = 0.6;
-        adGBC.gridx = 1; //column index
-        adGBC.gridy = 0;//row index
-        
-        GridBagConstraints NewsGBC = new GridBagConstraints();
-        NewsGBC.weightx = 1;
-        NewsGBC.weighty = 0.2;
-        NewsGBC.gridx = 0; //column index
-        NewsGBC.gridy = 1;//row index
-        
-        GridBagConstraints ImageGBC = new GridBagConstraints();
-        ImageGBC.weightx = 0.25;
-        ImageGBC.weighty = 0.6;
-        ImageGBC.gridx = 0; //column index
-        ImageGBC.gridy = 2;//row index
-        
+        adGBC.gridx = 1;
+        adGBC.gridy = 0;
+        adGBC.fill = GridBagConstraints.BOTH;
+
+        GridBagConstraints newsGBC = new GridBagConstraints();
+        newsGBC.weightx = 1;
+        newsGBC.weighty = 0.2;
+        newsGBC.gridx = 0;
+        newsGBC.gridy = 1;
+        newsGBC.gridwidth = 2;
+        newsGBC.fill = GridBagConstraints.BOTH;
+
+        GridBagConstraints imageGBC = new GridBagConstraints();
+        imageGBC.weightx = 0.25;
+        imageGBC.weighty = 0.6;
+        imageGBC.gridx = 0;
+        imageGBC.gridy = 2;
+        imageGBC.fill = GridBagConstraints.BOTH;
+
         add(weatherTimePanel, weatherTimeGBC);
         add(adPanel, adGBC);
-        add(newsPanel, NewsGBC);
-        add(imagePanel, ImageGBC);
-        
-        setVisible(true);
+        add(newsPanel, newsGBC);
+        add(imagePanel, imageGBC);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            SubwayScreen screen = new SubwayScreen();
+            screen.setVisible(true);
+        });
+    }
+
+    public static String getCurrentTime() {
+        LocalTime now = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); // 24-hour format
+        return now.format(formatter);
     }
 }
-
-	

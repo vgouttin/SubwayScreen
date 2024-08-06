@@ -8,5 +8,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="libraries/jsoup-1.18.1.jar"/>
 	<classpathentry kind="lib" path="libraries/json-20240303.jar"/>
+	<classpathentry kind="lib" path="C:/Users/vgout/ENSF380PT2/Final-Project/SubwayScreen/libraries/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/vgout/ENSF380PT2/Final-Project/SubwayScreen/libraries/ojdbc11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

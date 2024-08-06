@@ -28,10 +28,10 @@ public class Weather {
         return Jsoup.connect(url).get();
     }
 
-    public static void main(String[] args) {
-        Weather weather = new Weather();
-        String cityName = "Calgary";  // Replace with your city name
-        String weatherInfo = weather.getTemperature(cityName);
-        System.out.println(weatherInfo);
-    }
+   // public static void main(String[] args) {
+   //     Weather weather = new Weather();
+   //     String cityName = "Calgary";  // Replace with your city name
+   //     String weatherInfo = weather.getTemperature(cityName);
+   //     System.out.println(weatherInfo);
+  //  }
 }
