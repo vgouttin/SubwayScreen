@@ -3,8 +3,7 @@ package ca.ucalgary.ensf380;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.Timer;
-
+import javax.swing.Timer;
 import javax.swing.*;
 import java.sql.SQLException;
 import java.io.*;
@@ -30,7 +29,6 @@ public class SubwayScreen extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
         initializeComponents();
-        AdvertisementManager getAds = new AdvertisementManager(adPanel);
         
         // Timers
         weatherTimer = new Timer(60000, e -> changeWeather());
@@ -45,7 +43,7 @@ public class SubwayScreen extends JFrame implements ActionListener {
 
     public void changeWeather() {
         // Assume a default city name or get it from arguments
-        String cityName = "Calgary";
+        String cityName = "Calgary,CA";
         String weatherInfo = Weather.getWeather(cityName);
         weatherLabel.setText("<html>" + weatherInfo.replaceAll("\n", "<br>") + "</html>");
     }

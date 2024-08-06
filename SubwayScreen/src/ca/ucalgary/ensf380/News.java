@@ -1,6 +1,8 @@
 package ca.ucalgary.ensf380;
 
 import java.io.BufferedReader;
+
+import java.util.*;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -10,9 +12,13 @@ import org.json.JSONObject;
 //In this file since we want to be able to find news with a keyword or just simply the news
 //We need to make 2 different 
 public class News {
+	private ArrayList<String> news;
 	private static final String NEWS_API_URL = "https://newsdata.io/free-news-api";//endpoint
 	private static final String NEWS_API_KEY = "pub_50109bb228fb4a8154478601b2fc0c8938e2b";
 	
+	public News () {
+		this.news = new ArrayList<String>();
+	}
 	//method to fetch news with keyword
 	public String getNewsWithKeyword(String keyword) {
 		return fetchNews("q=" + keyword);//defines the query parameter search

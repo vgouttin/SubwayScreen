@@ -1,14 +1,18 @@
+/*
+ * Author: Victor Gouttin
+ * Ad.java
+ * version 1.4
+ */
+
 package ca.ucalgary.ensf380;
-//This class is to be implemented in Advertisements.java as a type Ad for the list of ads
+//This class is to be implemented in Advertisement.java as a type Ad for the list of ads
 //Also provides getters for when i need to access file_path
 public class Ad {
 	private int key;
 	private String name;
 	private String file_path;
 	
-	public Ad(int key, String name, String file_path) {
-		this.key = key;
-		this.name = name;
+	public Ad(String file_path) {
 		this.file_path = file_path;
 	}
 	
