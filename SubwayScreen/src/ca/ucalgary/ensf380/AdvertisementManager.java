@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class AdvertisementManager {
     private Timer adTimer = new Timer();
+    private Timer mapTimer = new Timer();
     private ArrayList<Ad> ads;
     private JPanel adPanel;
     private int currentAdIndex = 0;
@@ -24,6 +25,7 @@ public class AdvertisementManager {
         Advertisement advertisements = new Advertisement();
         ads = advertisements.getAds();
         startAdRotation();
+        startMapDisplay();
     }
 
     // Start rotating ads
@@ -43,7 +45,7 @@ public class AdvertisementManager {
             
             // Fetch the current ad
             Ad currentAd = ads.get(currentAdIndex);
-            String filePath = currentAd.getFile_Path(); // Ensure this method is correctly named in Ad
+            String filePath = currentAd.getFilePath();
 
             JLabel adLabel = new JLabel();
             try {
@@ -64,20 +66,14 @@ public class AdvertisementManager {
         });
     }
 
-    // Optionally, add a method to stop the timer if needed
-    public void stopAdRotation() {
-        adTimer.cancel();
-    }
-
-    // Optionally, add a method to handle map display
+    // Start displaying the map
     private void startMapDisplay() {
-        Timer mapTimer = new Timer();
         mapTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 displayMap();
             }
-        }, 0, AD_DISPLAY_TIME); // Adjust timing as needed
+        }, 0, MAP_DISPLAY_TIME); // Display map every 10 seconds
     }
 
     // Display the map
@@ -86,7 +82,7 @@ public class AdvertisementManager {
             adPanel.removeAll();
             
             // Path to your map image
-            String mapFilePath = "data/Maps/TrainMap.jpg"; 
+            String mapFilePath = "data/Maps/TrainMap.jpg";
             JLabel mapLabel = new JLabel();
             try {
                 ImageIcon icon = new ImageIcon(mapFilePath);
@@ -101,5 +97,11 @@ public class AdvertisementManager {
             adPanel.revalidate();
             adPanel.repaint();
         });
+    }
+
+    // Optionally, add a method to stop the timers if needed
+    public void stopManagers() {
+        adTimer.cancel();
+        mapTimer.cancel();
     }
 }
