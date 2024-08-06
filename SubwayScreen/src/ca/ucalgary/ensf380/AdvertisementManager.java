@@ -98,10 +98,4 @@ public class AdvertisementManager {
             adPanel.repaint();
         });
     }
-
-    // Optionally, add a method to stop the timers if needed
-    public void stopManagers() {
-        adTimer.cancel();
-        mapTimer.cancel();
-    }
 }
