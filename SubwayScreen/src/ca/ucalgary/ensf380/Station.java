@@ -9,6 +9,7 @@ public class Station {
 	private double stationX;
 	private double stationY;
 	private String stationLine;
+	private String commonStation;
 	
 	//Constructor
 	public Station(String stationNum, String stationName, String stationCode, double stationX, double stationY) {
@@ -20,12 +21,13 @@ public class Station {
 	}
 	
 	//constructor for system.java
-	public Station(String stationLine, String stationNum, String stationName, Double stationX, Double stationY) {
+	public Station(String stationLine, String stationNum, String stationName, Double stationX, Double stationY, String commonStation) {
 		this.stationLine = stationLine;
 		this.stationNum = stationNum;
 		this.stationName = stationName;
 		this.stationX = stationX;
 		this.stationY = stationY;
+		this.commonStation = commonStation;
 	}
 	
 	//Setters and getters
@@ -65,6 +67,11 @@ public class Station {
 	public void setStationY(double stationY) {
 		this.stationY = stationY;
 	}
-	
+	public String getCommonStaion() {
+		return commonStation;
+	}
+	public void setCommonStaion(String commonStation) {
+		this.commonStation = commonStation;
+	}
 	
 }
